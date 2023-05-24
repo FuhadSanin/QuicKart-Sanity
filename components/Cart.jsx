@@ -6,6 +6,7 @@ import {
   AiOutlineMinus,
   AiOutlinePlus,
 } from "react-icons/ai"
+import { TiDeleteOutline } from "react-icons/ti"
 import { urlFor } from "../lib/client"
 import Link from "next/link"
 
@@ -18,6 +19,8 @@ const Cart = () => {
     incQty,
     decQty,
     qty,
+    onremove,
+    toggleCartItemQuantity,
   } = useStateContext()
   return (
     <div className="cart-wrapper">
@@ -64,20 +67,50 @@ const Cart = () => {
                   <div className="flex bottom">
                     <div>
                       <p className="quantity-desc">
-                        <span className="minus" onClick={decQty}>
+                        <span
+                          className="minus"
+                          onClick={() =>
+                            toggleCartItemQuantity(item._id, "dec")
+                          }
+                        >
                           <AiOutlineMinus />
                         </span>
-                        <span className="num">{qty}</span>
-                        <span className="plus" onClick={incQty}>
+                        <span className="num">{item.quantity}</span>
+                        <span
+                          className="plus"
+                          onClick={() =>
+                            toggleCartItemQuantity(item._id, "inc")
+                          }
+                        >
                           <AiOutlinePlus />
                         </span>
                       </p>
                     </div>
+                    <button
+                      type="button"
+                      className="remove-item"
+                      onClick={() => onremove(item, item._id)}
+                    >
+                      <TiDeleteOutline />
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
         </div>
+        {cartItems.length >= 1 && (
+          <div className="cart-bottom">
+            <div className="total">
+              <h3>SubTotal: </h3>
+              <h3>${totalPrice}</h3>
+            </div>
+            <div className="btn-cotainer">
+              <button type="button" className="btn">
+                Pay with Stripe
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
